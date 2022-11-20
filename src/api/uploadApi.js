@@ -1,0 +1,6 @@
+import {form    } from '../util/Request.js'
+
+//默认导出的是一个对象
+export default {
+    upload: query => form(`/api/file/uploadImg`, query),
+}
