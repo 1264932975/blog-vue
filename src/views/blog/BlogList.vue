@@ -71,7 +71,7 @@
           <el-form-item>
             <div class="edit-tag">
               <el-tag
-                  v-for="tag in dynamicTags"
+                  v-for="tag in editData.bolgTag"
                   :key="tag"
                   class="mx-1"
                   closable
@@ -126,7 +126,7 @@ const inputVisible = ref(false)
 const InputRef = ref()
 
 const handleClose = (tag) => {
-  dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
+  editData.bolgTag.splice(editData.bolgTag.indexOf(tag), 1)
 }
 
 const showInput = () => {
@@ -134,8 +134,8 @@ const showInput = () => {
 }
 
 const handleInputConfirm = () => {
-  if (inputValue.value) {
-    dynamicTags.value.push(inputValue.value)
+  if (inputValue.value && editData.bolgTag.indexOf(inputValue.value)==-1) {
+    editData.bolgTag.push(inputValue.value)
   }
   inputVisible.value = false
   inputValue.value = ''
@@ -144,7 +144,7 @@ const handleInputConfirm = () => {
 
 //新增修改
 const editBlog = () => {
-  editData.bolgTag=dynamicTags.value.join(",")
+  // editData.bolgTag=dynamicTags.value.join(",")
   console.log(editData)
 }
 const rules = {
@@ -174,7 +174,7 @@ const windowConfig = reactive({
     }
   }]
 })
-const editData = reactive({});
+const editData = reactive({bolgTag:[]});
 const closeWindow = () => {
   windowConfig.show = false;
   loadingFormData();
