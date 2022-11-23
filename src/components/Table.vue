@@ -63,7 +63,7 @@ http://www.wuhancoder.com/special/QYdGDDRMGU.html
                      layout="total, sizes, prev, pager, next, jumper"
                      @size-change="handlePageSizeChange"
                      @current-change="handlePageNoChange"
-                     style="text-align: right"></el-pagination>
+                     />
     </div>
   </div>
 </template>

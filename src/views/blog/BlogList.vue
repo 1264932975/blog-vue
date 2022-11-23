@@ -26,9 +26,9 @@
       </el-row>
     </el-form>
     <Table :columns="columns"
-           :showPagination="true"
            :fetch="loadingFormData"
            :dataSource="tableData"
+           :options="tableOptions"
     >
       <template #cover="{index,row}">
         <Cover :cover=" row.cover"></Cover>
@@ -50,8 +50,6 @@
         <a class="a-link" @click="showEdit('edit',row)">修改</a>
         <el-divider direction="vertical"/>
         <a class="a-link" @click="del(row)">删除</a>
-        <el-divider direction="vertical"/>
-        <a class="a-link" @click="del(row)">预览</a>
       </template>
     </Table>
     <Dialog :show="windowConfig.show" :title="windowConfig.title" :buttons="windowConfig.buttons"
@@ -120,6 +118,18 @@ import blogApi from "../../api/blogApi.js";
 import EditMarkDown from "../../components/EditMarkDown.vue";
 import Confirm from "../../util/Confirm.js";
 
+//删除
+const del = (data) => {
+  Confirm("确定删除" + data.bolgTitle + "?", () => {
+    blogApi.deleteBlog({id: data.id}).then((res) => {
+      if (res.code == 200) {
+        proxy.$message.success(res.msg)
+        loadingFormData();
+      }
+    })
+  });
+}
+
 
 //标签
 const inputValue = ref('')
@@ -127,7 +137,7 @@ const inputVisible = ref(false)
 const InputRef = ref()
 
 const handleClose = (tag) => {
-  editData.bolgTag.splice(editData.bolgTag.indexOf(tag), 1)
+  editData.value.bolgTag.splice(editData.value.bolgTag.indexOf(tag), 1)
 }
 
 const showInput = () => {
@@ -135,8 +145,8 @@ const showInput = () => {
 }
 
 const handleInputConfirm = () => {
-  if (inputValue.value && editData.bolgTag.indexOf(inputValue.value) == -1) {
-    editData.bolgTag.push(inputValue.value)
+  if (inputValue.value && editData.value.bolgTag.indexOf(inputValue.value) == -1) {
+    editData.value.bolgTag.push(inputValue.value)
   }
   inputVisible.value = false
   inputValue.value = ''
@@ -150,8 +160,12 @@ const editBlog = () => {
     if (!v) {
       return;
     }
-    editData.bolgTag = editData.bolgTag.join(",")
-    blogApi.saveBlog(editData).then((res) => {
+    try {
+      editData.value.bolgTag = editData.value.bolgTag.join(",")
+    } catch (e) {
+      editData.value.bolgTag = ""
+    }
+    blogApi.saveBlog(editData.value).then((res) => {
       if (res.code == 200) {
         proxy.$message.success(res.msg)
         closeWindow()
@@ -189,34 +203,29 @@ const windowConfig = reactive({
     }
   }]
 })
-const editData = reactive({bolgTag: [], bolgCriticState: false});
+const editData = ref({bolgTag: [], bolgCriticState: false});
 const closeWindow = () => {
   windowConfig.show = false;
   loadingFormData();
 }
-const del = (data) => {
-  Confirm("确定删除" + data.bolgTitle + "?", () => {
-    blogApi.deleteBlog({id: data.id}).then((res) => {
-      if (res.code==200){
-        proxy.$message.success(res.msg)
-        loadingFormData();
-      }
-    })
-  });
 
-}
 
 const showEdit = (type, data) => {
   nextTick(() => {
     if (type == 'add') {
       windowConfig.title = "新增博客";
       editDataRef.value.resetFields();
+      editData.value = {bolgTag: [], bolgCriticState: false}
     } else if (type == 'edit') {
       blogApi.showBlog({id: data.id}).then((res) => {
         if (res.code = 200) {
           windowConfig.title = "修改博客";
-          Object.assign(editData, res.data)
-          editData.bolgTag = res.data.bolgTag.split(',')
+          editData.value = JSON.parse(JSON.stringify(res.data))
+          try {
+            editData.value.bolgTag = res.data.bolgTag.split(',')
+          } catch (e) {
+            editData.value.bolgTag = []
+          }
         }
       })
     }
@@ -230,9 +239,12 @@ const loadingFormData = () => {
   Object.assign(params, searchbarData)
   blogApi.indexPage(params).then((result) => {
     if (result.code == 200) {
-      Object.assign(tableData, result.data)
+      Object.assign(tableData,result.data)
     }
   })
+}
+const tableOptions = {
+  extHeight: 160
 }
 const tableData = reactive({});
 const columns = [{
@@ -263,11 +275,11 @@ const columns = [{
 }, {
   label: "作者",
   prop: "username",
-  width: 80
+  width: 100
 }, {
   label: "操作",
   prop: "op",
-  width: 150,
+  width: 100,
   scopedSlots: "op"
 }
 ]

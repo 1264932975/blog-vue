@@ -5,14 +5,15 @@
            :showPagination="false"
            :fetch="lodingData"
            :dataSource="tableData"
+           :options="tableOptions"
     >
       <template #cover="{index,row}">
         <Cover :cover=" row.cover"></Cover>
       </template>
       <template #op="{index,row}">
-          <a class="a-link" @click="showEdit('edit',row)">修改</a>
-          <el-divider direction="vertical"/>
-          <a class="a-link" @click="del(row)">删除</a>
+        <a class="a-link" @click="showEdit('edit',row)">修改</a>
+        <el-divider direction="vertical"/>
+        <a class="a-link" @click="del(row)">删除</a>
       </template>
 
     </Table>
@@ -73,8 +74,8 @@ const submitFrom = () => {
     if (!valid) {
       return;
     }
-    blogApi.saveClassify(formData).then((result) => {
-      if (res.code == 200) {
+    blogApi.saveClassify(formData.value).then((result) => {
+      if (result.code == 200) {
         dialogConfig.show = false;
         proxy.$message.success(result.msg)
         lodingData();
@@ -82,7 +83,7 @@ const submitFrom = () => {
     })
   })
 }
-const formData = reactive({});
+const formData = ref({});
 const formDataRef = ref();
 const rules = {
   name: [
@@ -101,9 +102,10 @@ const showEdit = (type, data) => {
     if (type == 'add') {
       dialogConfig.title = "新增分类";
       formDataRef.value.resetFields();
+      formData.value = {}
     } else if (type == 'edit') {
       dialogConfig.title = "修改分类";
-      Object.assign(formData, data)
+      formData.value = JSON.parse(JSON.stringify(data))
     }
   })
 }
@@ -115,6 +117,9 @@ const lodingData = () => {
   })
 }
 const tableData = reactive({});
+const tableOptions = {
+  extHeight: 70
+}
 const columns = [{
   label: "封面",
   prop: "cover",

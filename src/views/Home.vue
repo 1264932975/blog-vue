@@ -68,7 +68,13 @@ const menuList = ref([{
     path: "/home/classify"
   }
   ]
-}, {}
+}, {
+  title: "专题",
+  chield: [{
+    title: "专题管理",
+    path: "/home/project"
+  }]
+}
 ])
 
 </script>
