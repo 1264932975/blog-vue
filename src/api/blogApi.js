@@ -6,4 +6,7 @@ export default {
     saveClassify: query => post(`/api/article/saveClassify`, query),
     deleteClassify: query => get(`/api/article/deleteClassify`, query),
     indexPage: query => post(`/api/article/open/indexPage`, query),
+    saveBlog: query => post(`/api/article/edit`, query),
+    showBlog: query => get(`/api/article/open/show`, query),
+    deleteBlog: query => get(`/api/article/delete`, query),
 }

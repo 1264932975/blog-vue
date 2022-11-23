@@ -36,8 +36,9 @@
       <template #state="{index,row}">
         <div>
           发布状态：
-          <span v-if="row.state==0" style="color: red">草稿</span>
-          <span v-else style="color: green">已发布</span>
+          <span v-if="row.state==0" style="color: orange">草稿</span>
+          <span v-else-if="row.state==1" style="color: green">已发布</span>
+          <span v-else-if="row.state==2" style="color: green">已删除</span>
         </div>
         <div>
           评论状态：
@@ -113,10 +114,11 @@
 </template>
 
 <script setup>
-import {reactive, ref} from "vue";
-import {Search, Check, Close, Plus} from '@element-plus/icons-vue'
+import {getCurrentInstance, nextTick, reactive, ref} from "vue";
+import {Search, Check, Close} from '@element-plus/icons-vue'
 import blogApi from "../../api/blogApi.js";
 import EditMarkDown from "../../components/EditMarkDown.vue";
+import Confirm from "../../util/Confirm.js";
 
 
 //标签
@@ -142,8 +144,20 @@ const handleInputConfirm = () => {
 
 
 //新增修改
+const {proxy} = getCurrentInstance();
 const editBlog = () => {
-  console.log(editData)
+  editDataRef.value.validate((v) => {
+    if (!v) {
+      return;
+    }
+    editData.bolgTag = editData.bolgTag.join(",")
+    blogApi.saveBlog(editData).then((res) => {
+      if (res.code == 200) {
+        proxy.$message.success(res.msg)
+        closeWindow()
+      }
+    })
+  })
 }
 const rules = {
   bolgTitle: [
@@ -157,6 +171,9 @@ const rules = {
   }, bolgAbstract: {
     required: true,
     message: "请输入文章摘要"
+  }, bolgCriticState: {
+    required: true,
+    message: "请选择评论是否开启"
   }
 }
 const editDataRef = ref();
@@ -172,17 +189,38 @@ const windowConfig = reactive({
     }
   }]
 })
-const editData = reactive({bolgTag: []});
+const editData = reactive({bolgTag: [], bolgCriticState: false});
 const closeWindow = () => {
   windowConfig.show = false;
   loadingFormData();
 }
+const del = (data) => {
+  Confirm("确定删除" + data.bolgTitle + "?", () => {
+    blogApi.deleteBlog({id: data.id}).then((res) => {
+      if (res.code==200){
+        proxy.$message.success(res.msg)
+        loadingFormData();
+      }
+    })
+  });
+
+}
+
 const showEdit = (type, data) => {
-  if (type == 'add') {
-    windowConfig.title = '新增博客'
-  } else {
-    windowConfig.title = '修改博客'
-  }
+  nextTick(() => {
+    if (type == 'add') {
+      windowConfig.title = "新增博客";
+      editDataRef.value.resetFields();
+    } else if (type == 'edit') {
+      blogApi.showBlog({id: data.id}).then((res) => {
+        if (res.code = 200) {
+          windowConfig.title = "修改博客";
+          Object.assign(editData, res.data)
+          editData.bolgTag = res.data.bolgTag.split(',')
+        }
+      })
+    }
+  })
   windowConfig.show = true;
 }
 

@@ -51,7 +51,6 @@ VMdEditor.use(createLineNumbertPlugin());
 const emit = defineEmits();
 const change = (text,html) => {
   emit("update:modelValue",text)
-  console.log(html)
 }
 
 const props = defineProps({

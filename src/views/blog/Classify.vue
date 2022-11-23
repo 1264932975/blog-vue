@@ -74,9 +74,11 @@ const submitFrom = () => {
       return;
     }
     blogApi.saveClassify(formData).then((result) => {
-      dialogConfig.show = false;
-      proxy.$message.success(result.msg)
-      lodingData();
+      if (res.code == 200) {
+        dialogConfig.show = false;
+        proxy.$message.success(result.msg)
+        lodingData();
+      }
     })
   })
 }
