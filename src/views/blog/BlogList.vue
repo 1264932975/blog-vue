@@ -121,7 +121,6 @@ import EditMarkDown from "../../components/EditMarkDown.vue";
 
 //标签
 const inputValue = ref('')
-const dynamicTags = ref([])
 const inputVisible = ref(false)
 const InputRef = ref()
 
@@ -134,7 +133,7 @@ const showInput = () => {
 }
 
 const handleInputConfirm = () => {
-  if (inputValue.value && editData.bolgTag.indexOf(inputValue.value)==-1) {
+  if (inputValue.value && editData.bolgTag.indexOf(inputValue.value) == -1) {
     editData.bolgTag.push(inputValue.value)
   }
   inputVisible.value = false
@@ -144,7 +143,6 @@ const handleInputConfirm = () => {
 
 //新增修改
 const editBlog = () => {
-  // editData.bolgTag=dynamicTags.value.join(",")
   console.log(editData)
 }
 const rules = {
@@ -174,7 +172,7 @@ const windowConfig = reactive({
     }
   }]
 })
-const editData = reactive({bolgTag:[]});
+const editData = reactive({bolgTag: []});
 const closeWindow = () => {
   windowConfig.show = false;
   loadingFormData();
