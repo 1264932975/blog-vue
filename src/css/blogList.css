@@ -1,0 +1,19 @@
+.title-input {
+    width: 500px;
+}
+.edit-tag{
+    margin-left: 20px;
+    display: flex;
+}
+.edit-tag .input{
+    width: 100px;
+}
+.edit-critic-state{
+    margin-left: 20px;
+}
+.edit-classify-id{
+    margin-left: 20px;
+}
+.edit-tag .icon{
+    color: red;
+}

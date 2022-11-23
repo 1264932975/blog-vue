@@ -12,7 +12,9 @@ http://www.wuhancoder.com/special/QYdGDDRMGU.html
                class="cust-dialog"
                :top="top"
                :width="width"
-               :showCancel="showCancel">
+               :showCancel="showCancel"
+               :before-close="close"
+               :fullscreen="fullscreen">
       <div class="dialog-body">
         <slot></slot>
       </div>
@@ -36,6 +38,10 @@ http://www.wuhancoder.com/special/QYdGDDRMGU.html
 <script setup>
 
 const props = defineProps({
+  fullscreen:{
+    type:Boolean,
+    default:false
+  },
   title: {
     type: String,
   },

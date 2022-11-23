@@ -17,7 +17,7 @@
 
     </Table>
     <Dialog :show="dialogConfig.show" :title="dialogConfig.title" :buttons="dialogConfig.buttons"
-            @close="dialogConfig.show=false" :show-close="dialogConfig.showCancel">
+            @close="dialogConfig.show=false">
       <el-form>
         <el-form :model="formData" :rules="rules" ref="formDataRef">
           <el-form-item prop="name" label="名称">
@@ -60,7 +60,6 @@ const del = (data) => {
 const dialogConfig = reactive({
   title: "",
   show: false,
-  showCancel: false,
   buttons: [{
     type: "danger",
     text: "确定",
