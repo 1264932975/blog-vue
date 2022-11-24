@@ -5,7 +5,7 @@
         <div class="logo">logo</div>
         <div>
           <span>欢迎回来：</span>
-          <el-dropdown trigger="click">
+          <el-dropdown trigger="hover">
             <span class="header-name">
               {{ VueCookies.get("user").name }}
               <el-icon style="font-size: 15px"><ArrowDown/></el-icon>
@@ -13,9 +13,8 @@
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>个人信息</el-dropdown-item>
-                <el-dropdown-item>修改密码</el-dropdown-item>
-                <el-dropdown-item>退出登录</el-dropdown-item>
+                <el-dropdown-item @click="toUserInfo">个人信息</el-dropdown-item>
+                <el-dropdown-item @click="loginOut">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -55,8 +54,24 @@
 import {getCurrentInstance, ref} from "vue";
 import {Memo, ArrowDown} from '@element-plus/icons-vue'
 import VueCookies from "vue-cookies";
+import router from "../router/index.js";
+import loginApi from "../api/loginApi.js";
 
 const {proxy} = getCurrentInstance()
+
+const toUserInfo = () => {
+  router.push("/home/userInfo")
+}
+const loginOut = () => {
+  loginApi.logout(null).then((res) => {
+    let keys = VueCookies.keys();
+    for (let item in keys) {
+      VueCookies.remove(keys[item])
+    }
+    router.replace('/login')
+  })
+}
+
 
 const menuList = ref([{
   title: "博客",
@@ -73,6 +88,12 @@ const menuList = ref([{
   chield: [{
     title: "专题管理",
     path: "/home/project"
+  }]
+}, {
+  title: "设置",
+  chield: [{
+    title: "个人信息",
+    path: "/home/userInfo"
   }]
 }
 ])

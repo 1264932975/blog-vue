@@ -10,6 +10,7 @@ import VueCookies from "vue-cookies";
 import BlogList from "../views/blog/BlogList.vue"
 import Classify from "../views/blog/Classify.vue"
 import ProjectList from "../views/blog/ProjectList.vue";
+import UserInfo from "../views/setting/UserInfo.vue";
 // 2. 定义一些路由
 // 每个路由都需要映射到一个组件。
 // 我们后面再讨论嵌套路由。
@@ -38,6 +39,10 @@ const routes = [
             {
                 path: 'project',
                 component: ProjectList
+            },
+            {
+                path: 'userInfo',
+                component: UserInfo
             }
         ]
     }
@@ -54,8 +59,7 @@ const router = createRouter({
 
 //权限拦截
 router.beforeEach((to, from, next) => {
-    const token = VueCookies.get("token");
-    if (!token && to.path != "/login") {
+    if (!VueCookies.isKey("token") && to.path != "/login") {
         router.push("/login")
     }
     next();
