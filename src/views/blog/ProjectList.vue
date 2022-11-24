@@ -13,6 +13,7 @@
                  :fetch="lodingData"
                  :dataSource="tableData"
                  :options="tableOptions"
+                 @rowClick="rowClick"
           >
             <template #cover="{index,row}">
               <Cover :cover=" row.cover"></Cover>
@@ -31,6 +32,16 @@
           <template #header>
             <div class="card-header">
               <span>专题博客</span>
+              <Table :columns="rightcColumns"
+                     :dataSource="blogData"
+                     :options="tableOptions"
+                     :fetch="loadingRightData"
+              >
+                <template #op="{index,row}">
+                  <a class="a-link" @click="delForProject(row)">移除</a>
+                </template>
+
+              </Table>
             </div>
           </template>
           <Dialog :show="dialogConfig.show" :title="dialogConfig.title" :buttons="dialogConfig.buttons"
@@ -65,6 +76,54 @@ import blogApi from "../../api/blogApi.js";
 import Confirm from "../../util/Confirm.js";
 
 const {proxy} = getCurrentInstance();
+
+//从专题中移除
+const delForProject = (data) => {
+  Confirm("确定删除" + data.bolgTitle + "?", () => {
+    let parames = {
+      blogid: data.id,
+      projectId: rowid.value
+    }
+    blogApi.removeBlogFromProject(parames).then((result) => {
+      proxy.$message.success(result.msg)
+      loadingRightData();
+    })
+  });
+}
+//专题博客
+const rowid = ref()
+const blogData = ref({})
+const rowClick = (row) => {
+  rowid.value = row.id
+  loadingRightData()
+}
+const loadingRightData = () => {
+  let parames = {
+    id: rowid.value,
+    pageNum: blogData.value.pageNum,
+    pageSize: blogData.value.pageSize,
+  }
+  blogApi.indexProjectPage(parames).then((res) => {
+    console.log(res)
+    if (res.code = 200) {
+      blogData.value = JSON.parse(JSON.stringify(res.data))
+    }
+  })
+}
+const rightcColumns = [{
+  label: "标题",
+  prop: "bolgTitle",
+  width: 150
+}, {
+  label: "简介",
+  prop: "bolgAbstract",
+}, {
+  label: "操作",
+  prop: "op",
+  width: 100,
+  scopedSlots: "op"
+}
+]
 
 
 //删除
@@ -122,7 +181,7 @@ const showEdit = (type, data) => {
       dialogConfig.title = "新增专题";
       formData.value = {}
     } else if (type == 'edit') {
-      dialogConfig.title = "修改修改";
+      dialogConfig.title = "修改专题";
       formData.value = JSON.parse(JSON.stringify(data))
     }
   })
