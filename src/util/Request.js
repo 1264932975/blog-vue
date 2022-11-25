@@ -1,7 +1,8 @@
 import axios from 'axios'
 import {ElLoading, ElMessage} from "element-plus";
-import router  from "../router/index.js";
+import router from "../router/index.js";
 import VueCookies from "vue-cookies";
+
 const options = {
     lock: true,
     text: '正在加载...',
@@ -53,22 +54,22 @@ const request = function (query) {
         .request(query)
         .then((res) => {
             //...
-            if (res.data.code === 401) {
-                vue.prototype.$router.push({path: '/login'})
-                return Promise.reject(res.data.msg)
-            } else if (res.data.code === 50000) {
+            if (res.data.code === 50000) {
                 ElMessage({
-                    message:res.data.msg,
-                    type:"error"
+                    message: res.data.msg,
                 })
                 router.replace({path: '/login'})
-                return Promise.reject(res.data)
-            } else if (res.data.code === 501) {
-                return Promise.reject(res.data)
-            } else if (res.data.code === 502) {
-                return Promise.reject(res.data)
-            }
-            else {
+            } else if (res.data.code === 6000) {
+                ElMessage({
+                    message: res.data.msg,
+                    type: "warning"
+                })
+            } else if (res.data.code === 5000) {
+                ElMessage({
+                    message: res.data.msg,
+                    type: "error"
+                })
+            } else {
                 return Promise.resolve(res.data)
             }
         })
@@ -86,7 +87,7 @@ export const post = function (url, params) {
         withCredentials: true, //跨域允许携带cookie
         timeout: 30000,
         data: params,
-        headers: {'Content-Type': 'application/json', 'request-ajax': true,'token':VueCookies.get("token")},
+        headers: {'Content-Type': 'application/json', 'request-ajax': true, 'token': VueCookies.get("token")},
     }
     return request(query)
 }
@@ -99,7 +100,7 @@ export const get = function (url, params) {
         withCredentials: true,
         timeout: 30000,
         params: params,
-        headers: {'request-ajax': true,'token':VueCookies.get("token")},
+        headers: {'request-ajax': true, 'token': VueCookies.get("token")},
     }
     return request(query)
 }
@@ -115,7 +116,7 @@ export const form = function (url, params) {
         headers: {
             'Content-Type': 'multipart/form-data',
             'request-ajax': true,
-            'token':VueCookies.get("token")
+            'token': VueCookies.get("token")
         },
     }
     return request(query)

@@ -4,4 +4,5 @@ import {post, get} from '../util/Request.js'
 export default {
     login: query => post(`/api/user/login`, query),
     logout: query => get(`/api/user/logout`, query),
+    sendEmailCode: query => get(`/api/user/sendEmailCode`, query),
 }
