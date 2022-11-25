@@ -9,7 +9,7 @@
             <span class="header-name">
               {{ VueCookies.get("user").name }}
               <el-icon style="font-size: 15px"><ArrowDown/></el-icon>
-              <el-avatar :size="25" :src="proxy.globalUrl.imgUrl+VueCookies.get('user').cover" />
+              <el-avatar :size="25" :src="proxy.globalUrl.imgUrl+VueCookies.get('user').cover"/>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
@@ -81,14 +81,11 @@ const menuList = ref([{
   }, {
     title: "分类管理",
     path: "/home/classify"
-  }
-  ]
-}, {
-  title: "专题",
-  chield: [{
+  }, {
     title: "专题管理",
     path: "/home/project"
-  }]
+  }
+  ]
 }, {
   title: "设置",
   chield: [{

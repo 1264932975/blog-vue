@@ -49,16 +49,16 @@ VMdEditor.use(createEmojiPlugin());
 VMdEditor.use(createLineNumbertPlugin());
 
 const emit = defineEmits();
-const change = (text,html) => {
-  emit("update:modelValue",text)
+const change = (text, html) => {
+  emit("update:modelValue", text)
 }
 
 const props = defineProps({
   modelValue: {
     type: String,
-    default: ""
+    default: "# :warning:编辑器内图片无缓存存储区，一经上传永久存储，为了节省服务器磁盘空间，请谨慎上传:warning:"
   },
-  save:Function,
+  save: Function,
   height: {
     type: Number,
     default: 500
@@ -66,7 +66,7 @@ const props = defineProps({
 })
 const {proxy} = getCurrentInstance();
 const handleUploadImage = (event, insertImage, files) => {
-  UploadApi.uploadImg({file: files[0]}).then((result) => {
+  UploadApi.uploadInMarkDown({file: files[0]}).then((result) => {
     if (result.code == 200) {
       insertImage({
         url: proxy.globalUrl.imgUrl + result.data,
