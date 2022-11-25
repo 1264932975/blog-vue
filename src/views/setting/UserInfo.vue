@@ -10,7 +10,7 @@
           <el-input v-model="formData.name" placeholder="请输入昵称"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" plain>保存</el-button>
+          <el-button type="primary" plain @click="save">保存</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="warning" plain>修改密码和邮箱点我！设置邮箱后可使用验证码登录</el-button>
@@ -23,26 +23,32 @@
         </el-form-item>
       </el-col>
     </el-row>
-
-
   </el-form>
 </template>
 
 <script setup>
-import {ref} from "vue";
-import {Message, Lock} from '@element-plus/icons-vue'
+import {getCurrentInstance, ref} from "vue";
 import userApi from "../../api/userApi.js";
 
+const {proxy} = getCurrentInstance();
 
-const formData = ref({})
+
 const rules = {}
 
+
+const save = () => {
+  userApi.saveIntroduction(formData.value).then((res) => {
+    proxy.$message.success(res.msg)
+    loadingData();
+  })
+}
+
+//加载
+const formData = ref({})
 const loadingData = () => {
   userApi.showUserList().then((res) => {
-    console.log(res)
     formData.value = res.data
   })
-  console.log(formData.value)
 }
 loadingData();
 </script>

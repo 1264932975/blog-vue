@@ -104,7 +104,6 @@ const loadingRightData = () => {
     pageSize: blogData.value.pageSize,
   }
   blogApi.indexProjectPage(parames).then((res) => {
-    console.log(res)
     blogData.value = JSON.parse(JSON.stringify(res.data))
   })
 }
