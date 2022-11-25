@@ -6,8 +6,8 @@
         <el-form-item prop="cover" label="头像">
           <ImgUpload v-model="formData.cover"/>
         </el-form-item>
-        <el-form-item prop="bolgAbstract" label="昵称:">
-          <el-input v-model="formData.bolgAbstract" placeholder="请输入昵称"/>
+        <el-form-item prop="name" label="昵称:">
+          <el-input v-model="formData.name" placeholder="请输入昵称"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" plain>保存</el-button>
@@ -17,9 +17,9 @@
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item prop="bolgText">
+        <el-form-item prop="introduction">
           <h3>个人介绍</h3>
-          <EditMarkDown v-model="formData.bolgText" :save="save"></EditMarkDown>
+          <EditMarkDown v-model="formData.introduction" :save="save"></EditMarkDown>
         </el-form-item>
       </el-col>
     </el-row>
@@ -31,10 +31,20 @@
 <script setup>
 import {ref} from "vue";
 import {Message, Lock} from '@element-plus/icons-vue'
+import userApi from "../../api/userApi.js";
+
 
 const formData = ref({})
 const rules = {}
 
+const loadingData = () => {
+  userApi.showUserList().then((res) => {
+    console.log(res)
+    formData.value = res.data
+  })
+  console.log(formData.value)
+}
+loadingData();
 </script>
 
 <style scoped>

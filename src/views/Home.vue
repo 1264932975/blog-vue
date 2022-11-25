@@ -9,7 +9,7 @@
             <span class="header-name">
               {{ VueCookies.get("user").name }}
               <el-icon style="font-size: 15px"><ArrowDown/></el-icon>
-              <img class="header-avatar" :src="proxy.globalUrl.imgUrl+VueCookies.get('user').cover">
+              <el-avatar :size="25" :src="proxy.globalUrl.imgUrl+VueCookies.get('user').cover" />
             </span>
             <template #dropdown>
               <el-dropdown-menu>
