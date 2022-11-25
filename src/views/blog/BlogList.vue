@@ -122,10 +122,8 @@ import Confirm from "../../util/Confirm.js";
 const del = (data) => {
   Confirm("确定删除" + data.bolgTitle + "?", () => {
     blogApi.deleteBlog({id: data.id}).then((res) => {
-      if (res.code == 200) {
-        proxy.$message.success(res.msg)
-        loadingFormData();
-      }
+      proxy.$message.success(res.msg)
+      loadingFormData();
     })
   });
 }
@@ -166,10 +164,8 @@ const editBlog = () => {
       editData.value.bolgTag = ""
     }
     blogApi.saveBlog(editData.value).then((res) => {
-      if (res.code == 200) {
-        proxy.$message.success(res.msg)
-        closeWindow()
-      }
+      proxy.$message.success(res.msg)
+      closeWindow()
     })
   })
 }
@@ -218,14 +214,12 @@ const showEdit = (type, data) => {
       editData.value = {bolgTag: [], bolgCriticState: false}
     } else if (type == 'edit') {
       blogApi.showBlog({id: data.id}).then((res) => {
-        if (res.code = 200) {
-          windowConfig.title = "修改博客";
-          editData.value = JSON.parse(JSON.stringify(res.data))
-          try {
-            editData.value.bolgTag = res.data.bolgTag.split(',')
-          } catch (e) {
-            editData.value.bolgTag = []
-          }
+        windowConfig.title = "修改博客";
+        editData.value = JSON.parse(JSON.stringify(res.data))
+        try {
+          editData.value.bolgTag = res.data.bolgTag.split(',')
+        } catch (e) {
+          editData.value.bolgTag = []
         }
       })
     }
@@ -239,7 +233,7 @@ const loadingFormData = () => {
   Object.assign(params, searchbarData)
   blogApi.indexPage(params).then((result) => {
     if (result.code == 200) {
-      Object.assign(tableData,result.data)
+      Object.assign(tableData, result.data)
     }
   })
 }

@@ -105,9 +105,7 @@ const loadingRightData = () => {
   }
   blogApi.indexProjectPage(parames).then((res) => {
     console.log(res)
-    if (res.code = 200) {
-      blogData.value = JSON.parse(JSON.stringify(res.data))
-    }
+    blogData.value = JSON.parse(JSON.stringify(res.data))
   })
 }
 const rightcColumns = [{
