@@ -5,4 +5,5 @@ export default {
     login: query => post(`/api/user/login`, query),
     logout: query => get(`/api/user/logout`, query),
     sendEmailCode: query => get(`/api/user/sendEmailCode`, query),
+    emailLogin: query => post(`/api/user/emailLogin`, query),
 }

@@ -53,7 +53,6 @@ const request = function (query) {
     return axios
         .request(query)
         .then((res) => {
-            //...
             if (res.data.code === 50000) {
                 ElMessage({
                     message: res.data.msg,
@@ -69,7 +68,7 @@ const request = function (query) {
                     message: res.data.msg,
                     type: "error"
                 })
-            } else {
+            } else if (res.data.code == 200) {
                 return Promise.resolve(res.data)
             }
         })

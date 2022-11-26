@@ -38,11 +38,9 @@ const login = () => {
       return;
     }
     loginApi.login(formData).then((result) => {
-      if (result.code == 200) {
         VueCookies.set("user", result.data, "1D");
         VueCookies.set("token", result.data.token, "1D");
         router.replace("/home")
-      }
     })
   })
 }
