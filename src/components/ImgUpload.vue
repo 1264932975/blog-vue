@@ -29,7 +29,7 @@ const props = defineProps({
 const emit = defineEmits();
 const uploadImage = (file) => {
   uploadApi.uploadImg({file: file.file}).then((result) => {
-    if (result.code == 200) {
+    if (result) {
       emit("update:modelValue", result.data)
     }
   })

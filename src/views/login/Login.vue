@@ -38,9 +38,11 @@ const login = () => {
       return;
     }
     loginApi.login(formData).then((result) => {
+      if (result){
         VueCookies.set("user", result.data, "1D");
         VueCookies.set("token", result.data.token, "1D");
         router.replace("/home")
+      }
     })
   })
 }

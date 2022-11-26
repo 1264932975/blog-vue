@@ -122,8 +122,10 @@ import Confirm from "../../util/Confirm.js";
 const del = (data) => {
   Confirm("确定删除" + data.bolgTitle + "?", () => {
     blogApi.deleteBlog({id: data.id}).then((res) => {
-      proxy.$message.success(res.msg)
-      loadingFormData();
+      if (res) {
+        proxy.$message.success(res.msg)
+        loadingFormData();
+      }
     })
   });
 }
@@ -164,8 +166,10 @@ const editBlog = () => {
       editData.value.bolgTag = ""
     }
     blogApi.saveBlog(editData.value).then((res) => {
-      proxy.$message.success(res.msg)
-      closeWindow()
+      if (res) {
+        proxy.$message.success(res.msg)
+        closeWindow()
+      }
     })
   })
 }
@@ -214,12 +218,14 @@ const showEdit = (type, data) => {
       editData.value = {bolgTag: [], bolgCriticState: false}
     } else if (type == 'edit') {
       blogApi.showBlog({id: data.id}).then((res) => {
-        windowConfig.title = "修改博客";
-        editData.value = JSON.parse(JSON.stringify(res.data))
-        try {
-          editData.value.bolgTag = res.data.bolgTag.split(',')
-        } catch (e) {
-          editData.value.bolgTag = []
+        if (res) {
+          windowConfig.title = "修改博客";
+          editData.value = JSON.parse(JSON.stringify(res.data))
+          try {
+            editData.value.bolgTag = res.data.bolgTag.split(',')
+          } catch (e) {
+            editData.value.bolgTag = []
+          }
         }
       })
     }
@@ -232,7 +238,7 @@ const loadingFormData = () => {
   let params = {pageNum: tableData.pageNum, pageSize: tableData.pageSize}
   Object.assign(params, searchbarData)
   blogApi.indexPage(params).then((result) => {
-    if (result.code == 200) {
+    if (result) {
       Object.assign(tableData, result.data)
     }
   })
@@ -283,7 +289,9 @@ const searchbarData = reactive({})
 const classifyList = ref();
 const loadingClassifyList = () => {
   blogApi.getClassify(null).then((result) => {
-    classifyList.value = result.data;
+    if (result){
+      classifyList.value = result.data;
+    }
   })
 }
 loadingClassifyList();

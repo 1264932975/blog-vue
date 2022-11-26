@@ -85,8 +85,10 @@ const delForProject = (data) => {
       projectId: rowid.value
     }
     blogApi.removeBlogFromProject(parames).then((result) => {
-      proxy.$message.success(result.msg)
-      loadingRightData();
+      if (result){
+        proxy.$message.success(result.msg)
+        loadingRightData();
+      }
     })
   });
 }
@@ -104,7 +106,9 @@ const loadingRightData = () => {
     pageSize: blogData.value.pageSize,
   }
   blogApi.indexProjectPage(parames).then((res) => {
-    blogData.value = JSON.parse(JSON.stringify(res.data))
+    if (res){
+      blogData.value = JSON.parse(JSON.stringify(res.data))
+    }
   })
 }
 const rightcColumns = [{
@@ -127,8 +131,10 @@ const rightcColumns = [{
 const del = (data) => {
   Confirm("确定删除" + data.name + "?", () => {
     blogApi.deleteProject({id: data.id}).then((result) => {
-      proxy.$message.success(result.msg)
-      lodingData();
+      if (result){
+        proxy.$message.success(result.msg)
+        lodingData();
+      }
     })
   });
 }
@@ -150,7 +156,7 @@ const submitFrom = () => {
       return;
     }
     blogApi.saveProject(formData.value).then((result) => {
-      if (result.code == 200) {
+      if (result) {
         dialogConfig.show = false;
         proxy.$message.success(result.msg)
         lodingData();
@@ -188,7 +194,9 @@ const showEdit = (type, data) => {
 const lodingData = () => {
   let params = {pageNum: tableData.pageNum, pageSize: tableData.pageSize}
   blogApi.getProject(params).then((result) => {
-    Object.assign(tableData, result.data)
+    if (result){
+      Object.assign(tableData, result.data)
+    }
   })
 }
 const tableData = reactive({});

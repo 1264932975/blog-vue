@@ -67,7 +67,7 @@ const props = defineProps({
 const {proxy} = getCurrentInstance();
 const handleUploadImage = (event, insertImage, files) => {
   UploadApi.uploadInMarkDown({file: files[0]}).then((result) => {
-    if (result.code == 200) {
+    if (result) {
       insertImage({
         url: proxy.globalUrl.imgUrl + result.data,
         desc: '图片',

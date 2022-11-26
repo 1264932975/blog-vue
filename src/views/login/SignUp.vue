@@ -8,11 +8,9 @@
       <el-form-item prop="checkCode">
         <div class="login-code">
           <el-input :prefix-icon="Message" maxlength="4" v-model="formData.checkCode" clearable placeholder="验证码"/>
-          <keep-alive>
-            <el-button type="info" plain style="margin-left: 5px" @click="sendEmailCode" :disabled="isDisabled">
-              {{ message }}
-            </el-button>
-          </keep-alive>
+          <el-button type="info" plain style="margin-left: 5px" @click="sendEmailCode" :disabled="isDisabled">
+            {{ message }}
+          </el-button>
         </div>
       </el-form-item>
       <el-form-item>
@@ -70,20 +68,22 @@ const sendEmailCode = () => {
       return;
     }
     loginApi.sendEmailCode({email: formData.email}).then((res) => {
-      isDisabled.value = true;
-      let interval = setInterval(() => {
-        if (time.value > 0) {
-          time.value--
-          message.value = time.value + 's'
-          VueCookies.set("time", time.value, 0)
-        } else {
-          time.value = 60
-          VueCookies.set("time", time.value, 0)
-          message.value = '重新发送'
-          isDisabled.value = false
-          clearInterval(interval)
-        }
-      }, 1000)
+      if (res) {
+        isDisabled.value = true;
+        let interval = setInterval(() => {
+          if (time.value > 0) {
+            time.value--
+            message.value = time.value + 's'
+            VueCookies.set("time", time.value, 0)
+          } else {
+            time.value = 60
+            VueCookies.set("time", time.value, 0)
+            message.value = '重新发送'
+            isDisabled.value = false
+            clearInterval(interval)
+          }
+        }, 1000)
+      }
     })
   })
 }
@@ -103,9 +103,11 @@ const login = () => {
       return;
     }
     loginApi.emailLogin(formData).then((res) => {
-      VueCookies.set("user", res.data, "1D");
-      VueCookies.set("token", res.data.token, "1D");
-      router.replace("/home")
+      if (res) {
+        VueCookies.set("user", res.data, "1D");
+        VueCookies.set("token", res.data.token, "1D");
+        router.replace("/home")
+      }
     })
 
   })
