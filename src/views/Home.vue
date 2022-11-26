@@ -91,7 +91,11 @@ const menuList = ref([{
   chield: [{
     title: "个人信息",
     path: "/home/userInfo"
-  }]
+  }, {
+    title: "成员管理",
+    path: "/home/userController"
+  }
+  ]
 }
 ])
 

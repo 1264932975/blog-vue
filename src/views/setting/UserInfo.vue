@@ -188,7 +188,7 @@ const save = () => {
 //加载
 const formData = ref({})
 const loadingData = () => {
-  userApi.showUserList().then((res) => {
+  userApi.showDetil().then((res) => {
     if (res) {
       formData.value = res.data
       dialogData.value.email = res.data.email
