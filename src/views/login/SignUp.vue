@@ -2,8 +2,8 @@
   <div class="login-panel">
     <div class="login-tatil">验证码登录</div>
     <el-form :model="formData" :rules="rules" ref="formDataRef">
-      <el-form-item prop="email">
-        <el-input :prefix-icon="User" validate-event v-model="formData.email" clearable placeholder="邮箱"/>
+      <el-form-item prop="username">
+        <el-input :prefix-icon="User" validate-event v-model="formData.username" clearable placeholder="邮箱"/>
       </el-form-item>
       <el-form-item prop="checkCode">
         <div class="login-code">
@@ -63,11 +63,11 @@ const timeClick = () => {
 timeClick()
 
 const sendEmailCode = () => {
-  formDataRef.value.validateField("email", (valid) => {
+  formDataRef.value.validateField("username", (valid) => {
     if (!valid) {
       return;
     }
-    loginApi.sendEmailCode({email: formData.email}).then((res) => {
+    loginApi.sendEmailCode(formData).then((res) => {
       if (res) {
         isDisabled.value = true;
         let interval = setInterval(() => {
@@ -106,6 +106,7 @@ const login = () => {
       if (res) {
         VueCookies.set("user", res.data, "1D");
         VueCookies.set("token", res.data.token, "1D");
+        VueCookies.set("time", time.value, 0)
         router.replace("/home")
       }
     })
@@ -115,7 +116,7 @@ const login = () => {
 const formData = reactive({});
 const formDataRef = ref();
 const rules = {
-  email: [
+  username: [
     {required: true, message: '请输入邮箱地址', trigger: 'blur'},
     {
       type: 'email',

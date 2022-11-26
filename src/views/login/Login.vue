@@ -3,7 +3,7 @@
     <div class="login-tatil">登录</div>
     <el-form :model="formData" :rules="rules" ref="formDataRef">
       <el-form-item prop="username">
-        <el-input :prefix-icon="User" v-model="formData.username" clearable placeholder="账号"/>
+        <el-input :prefix-icon="User" v-model="formData.username" clearable placeholder="邮箱"/>
       </el-form-item>
       <el-form-item prop="password">
         <el-input type="password" :prefix-icon="Lock" v-model="formData.password" show-password clearable
@@ -38,7 +38,7 @@ const login = () => {
       return;
     }
     loginApi.login(formData).then((result) => {
-      if (result){
+      if (result) {
         VueCookies.set("user", result.data, "1D");
         VueCookies.set("token", result.data.token, "1D");
         router.replace("/home")
@@ -50,7 +50,12 @@ const formDataRef = ref()
 const formData = reactive({});
 const rules = {
   username: [
-    {required: true, message: '请输入用户名', trigger: 'blur'},
+    {required: true, message: '请输入邮箱地址', trigger: 'blur'},
+    {
+      type: 'email',
+      message: '请输入正确的邮箱地址',
+      trigger: ['blur', 'change'],
+    },
   ], password: {
     required: true,
     message: "请输入密码"

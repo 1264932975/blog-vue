@@ -275,7 +275,7 @@ const columns = [{
 }, {
   label: "作者",
   prop: "username",
-  width: 100
+  width: 200
 }, {
   label: "操作",
   prop: "op",

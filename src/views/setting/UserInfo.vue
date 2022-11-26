@@ -13,7 +13,7 @@
           <el-button type="primary" plain @click="save">保存</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="warning" plain @click="toUpdate">修改密码和邮箱点我！设置邮箱后可使用验证码登录</el-button>
+          <el-button type="warning" plain @click="toUpdate">修改密码点我！</el-button>
         </el-form-item>
       </el-col>
       <el-col :span="12">
@@ -30,9 +30,6 @@
           @close="dialogConfig.show=false">
     <el-form>
       <el-form :model="dialogData" :rules="rules" ref="formDataRef">
-        <el-form-item prop="email" label="邮箱">
-          <el-input v-model="dialogData.email" clearable/>
-        </el-form-item>
         <el-form-item prop="checkCode" label="验证码">
           <el-input :prefix-icon="Message" maxlength="4" v-model="dialogData.checkCode" clearable placeholder="验证码"
                     class="code"/>
@@ -83,28 +80,23 @@ const isDisabled = ref(false);
 const time = ref();
 const message = ref('获取验证码')
 const sendEmailCode = () => {
-  formDataRef.value.validateField("email", (valid) => {
-    if (!valid) {
-      return;
+  loginApi.sendEmailCode({username: formData.value.username}).then((res) => {
+    if (res) {
+      isDisabled.value = true;
+      let interval = setInterval(() => {
+        if (time.value > 0) {
+          time.value--
+          message.value = time.value + 's'
+          VueCookies.set("time", time.value, 0)
+        } else {
+          time.value = 60
+          VueCookies.set("time", time.value, 0)
+          message.value = '重新发送'
+          isDisabled.value = false
+          clearInterval(interval)
+        }
+      }, 1000)
     }
-    loginApi.sendEmailCode({email: dialogData.value.email}).then((res) => {
-      if (res) {
-        isDisabled.value = true;
-        let interval = setInterval(() => {
-          if (time.value > 0) {
-            time.value--
-            message.value = time.value + 's'
-            VueCookies.set("time", time.value, 0)
-          } else {
-            time.value = 60
-            VueCookies.set("time", time.value, 0)
-            message.value = '重新发送'
-            isDisabled.value = false
-            clearInterval(interval)
-          }
-        }, 1000)
-      }
-    })
   })
 }
 const timeClick = () => {
@@ -156,16 +148,14 @@ const rules = {
     required: true,
     message: "昵称不能为空"
   },
-  email: [
-    {required: true, message: '请输入邮箱地址', trigger: 'blur'},
-    {
-      type: 'email',
-      message: '请输入正确的邮箱地址',
-      trigger: ['blur', 'change'],
-    },
+  password: [
+    {required: true, message: '请输入邮箱地址'},
   ], checkCode: {
     required: true,
     message: "请输入验证码"
+  }, cover: {
+    required: true,
+    message: "请上传头像"
   }
 }
 
@@ -176,13 +166,17 @@ const save = () => {
     if (!valid) {
       return;
     }
-    userApi.saveIntroduction(formData.value).then((res) => {
-      if (res) {
-        proxy.$message.success(res.msg + "，重新登录后生效")
+    formDataRef.value.validateField("cover", (valid) => {
+      if (!valid) {
+        return;
       }
+      userApi.saveIntroduction(formData.value).then((res) => {
+        if (res) {
+          proxy.$message.success(res.msg + "，重新登录后生效")
+        }
+      })
     })
   })
-
 }
 
 //加载
@@ -190,8 +184,8 @@ const formData = ref({})
 const loadingData = () => {
   userApi.showDetil().then((res) => {
     if (res) {
+      console.log(res.data)
       formData.value = res.data
-      dialogData.value.email = res.data.email
     }
   })
 }
