@@ -10,12 +10,18 @@
       <template #cover="{index,row}">
         <Cover :cover=" row.cover"></Cover>
       </template>
+      <template #state="{index,row}">
+        <el-switch v-model="row.state" inline-prompt active-text="正常" inactive-text="禁用" :loading="loading"
+                   @click="change(row)"/>
+        <!--        <span v-if="row.state==true" style="color: green">正常</span>-->
+        <!--        <span v-else-if="row.state==false" style="color: red">禁用</span>-->
+      </template>
       <template #roleId="{index,row}">
-        {{ row.roleId }}
+        <el-select v-model="row.roleId">
+          <el-option v-for="item in roleList" :value="item.id" :label="item.name" @click="changeRole(row)"/>
+        </el-select>
       </template>
       <template #op="{index,row}">
-        <a class="a-link" @click="">禁用/开启</a>
-        <el-divider direction="vertical"/>
         <a class="a-link" @click="del(row)">删除</a>
       </template>
 
@@ -44,6 +50,37 @@ import userApi from "../../api/userApi.js";
 
 const {proxy} = getCurrentInstance();
 
+//权限
+const changeRole = (data) => {
+  userApi.changeRole(data).then((res) => {
+    if (res) {
+      proxy.$message.success(res.msg)
+    }
+  })
+}
+
+const roleList = ref();
+const loadingRoleList = () => {
+  userApi.getRole().then((res) => {
+    if (res) {
+      roleList.value = res.data;
+    }
+  })
+}
+loadingRoleList();
+
+
+//禁用
+const loading = ref(false)
+const change = (data) => {
+  loading.value = true;
+  userApi.changeState(data).then((res) => {
+    if (res) {
+      proxy.$message.success(res.msg)
+      loading.value = false;
+    }
+  })
+}
 
 //删除
 const del = (data) => {
@@ -128,21 +165,23 @@ const columns = [{
   prop: "name",
   width: 150
 }, {
-  label: "邮箱",
-  prop: "email",
-}, {
   label: "权限",
   prop: "roleId",
-  width: 100,
+  width: 200,
   scopedSlots: "roleId"
 }, {
   label: "博客数量",
   prop: "count",
   width: 80
 }, {
+  label: "状态",
+  prop: "state",
+  width: 80,
+  scopedSlots: "state"
+}, {
   label: "操作",
   prop: "op",
-  width: 150,
+  width: 80,
   scopedSlots: "op"
 }
 ]
