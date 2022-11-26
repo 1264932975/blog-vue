@@ -68,8 +68,8 @@ const submitFrom = () => {
     userApi.updatePwd(dialogData.value).then((res) => {
       if (res) {
         proxy.$message.success(res.msg)
-        dialogData.value={}
-        dialogConfig.show=false
+        dialogData.value = {}
+        dialogConfig.show = false
         loadingData();
       }
     })
