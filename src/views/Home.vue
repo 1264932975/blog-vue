@@ -24,7 +24,7 @@
       <el-container class="container">
         <el-aside class="aside">
           <div>
-            <el-button type="success" class="post-button">发布</el-button>
+            <el-button type="success" class="post-button" disabled >一切从这里开始</el-button>
             <el-menu router>
               <el-sub-menu v-for="menu in menuList" :index="menu.title">
                 <template #title>
