@@ -19,11 +19,17 @@
               <Cover :cover=" row.cover"></Cover>
             </template>
             <template #op="{index,row}">
-              <el-button type="primary" circle plain :icon="Edit" @click="showEdit('edit',row)"/>
+              <el-tooltip content="编辑">
+                <el-button type="primary" circle plain :icon="Edit" @click="showEdit('edit',row)"/>
+              </el-tooltip>
               <el-divider direction="vertical"/>
-              <el-button type="danger" plain :icon="Delete" circle @click="del(row)"/>
-              <el-divider/>
-              <el-button type="success" plain size="small" @click="blogAdd(row)" round>添加博客到专题</el-button>
+              <el-tooltip content="删除">
+                <el-button type="danger" plain :icon="Delete" circle @click="del(row)"/>
+              </el-tooltip>
+              <el-divider direction="vertical"/>
+              <el-tooltip content="添加博客到专题">
+                <el-button type="success" plain :icon="Plus" @click="blogAdd(row)" circle/>
+              </el-tooltip>
             </template>
           </Table>
         </el-card>
@@ -89,7 +95,7 @@ import Dialog from "../../components/Dialog.vue";
 import ImgUpload from "../../components/ImgUpload.vue";
 import blogApi from "../../api/blogApi.js";
 import Confirm from "../../util/Confirm.js";
-import {Delete, Edit} from "@element-plus/icons-vue"
+import {Delete, Edit, Plus} from "@element-plus/icons-vue"
 
 const {proxy} = getCurrentInstance();
 
@@ -111,7 +117,7 @@ const addBlogDialog = reactive({
         if (res) {
           proxy.$message.success(res.msg)
           addBlogDialog.show = false
-          rowClick({id:blogAddData.value.projectId});
+          rowClick({id: blogAddData.value.projectId});
         }
       })
     }
@@ -261,7 +267,7 @@ const columns = [{
 }, {
   label: "操作",
   prop: "op",
-  width: 150,
+  width: 160,
   scopedSlots: "op"
 
 }

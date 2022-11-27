@@ -39,7 +39,6 @@
           发布状态：
           <span v-if="row.state==0" style="color: orange">草稿</span>
           <span v-else-if="row.state==1" style="color: green">已发布</span>
-          <span v-else-if="row.state==2" style="color: green">已删除</span>
         </div>
         <div>
           评论状态：
@@ -48,9 +47,17 @@
         </div>
       </template>
       <template #op="{index,row}">
-        <el-button type="primary" circle plain :icon="Edit" @click="showEdit('edit',row)"/>
+        <el-tooltip content="更改发布状态">
+          <el-button type="success" plain :icon="Refresh" circle @click="changeBlogState(row)"/>
+        </el-tooltip>
         <el-divider direction="vertical"/>
-        <el-button type="danger" plain :icon="Delete" circle @click="del(row)"/>
+        <el-tooltip content="编辑">
+          <el-button type="primary" circle plain :icon="Edit" @click="showEdit('edit',row)"/>
+        </el-tooltip>
+        <el-divider direction="vertical"/>
+        <el-tooltip content="删除">
+          <el-button type="danger" plain :icon="Delete" circle @click="del(row)"/>
+        </el-tooltip>
       </template>
     </Table>
     <Dialog :show="windowConfig.show" :title="windowConfig.title" :buttons="windowConfig.buttons"
@@ -114,10 +121,25 @@
 
 <script setup>
 import {getCurrentInstance, nextTick, reactive, ref} from "vue";
-import {Search, Check, Close, Delete, Edit} from '@element-plus/icons-vue'
+import {Search, Check, Close, Delete, Edit, Refresh} from '@element-plus/icons-vue'
 import blogApi from "../../api/blogApi.js";
 import EditMarkDown from "../../components/EditMarkDown.vue";
 import Confirm from "../../util/Confirm.js";
+
+
+//发布
+const loading = ref(false)
+const changeBlogState = (row) => {
+  loading.value = true;
+  blogApi.changeBlogState({id: row.id}).then((res) => {
+    if (res) {
+      proxy.$message.success(res.msg)
+      loading.value = false;
+      loadingFormData();
+    }
+  })
+}
+
 
 //点击行复制
 const rowClick = (data) => {
@@ -252,6 +274,8 @@ const loadingFormData = () => {
     }
   })
 }
+
+
 const tableOptions = {
   extHeight: 160
 }
@@ -275,7 +299,7 @@ const columns = [{
 }, {
   label: "状态",
   prop: "state",
-  width: 150,
+  width: 165,
   scopedSlots: "state"
 }, {
   label: "分类",
@@ -292,7 +316,7 @@ const columns = [{
 }, {
   label: "操作",
   prop: "op",
-  width: 120,
+  width: 160,
   scopedSlots: "op"
 }
 ]

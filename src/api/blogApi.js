@@ -17,4 +17,5 @@ export default {
     addToProject: query => post(`/api/article/addToProject`, query),
     indexProjectPage: query => post(`/api/article/open/indexProjectPage`, query),
     removeBlogFromProject: query => form(`/api/article/removeBlogFromProject`, query),
+    changeBlogState: query => get(`/api/article/changeBlogState`, query),
 }

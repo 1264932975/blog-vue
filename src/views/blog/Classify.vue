@@ -12,9 +12,14 @@
         <Cover :cover=" row.cover"></Cover>
       </template>
       <template #op="{index,row}">
-        <el-button type="primary" circle plain :icon="Edit" @click="showEdit('edit',row)"/>
+        <el-tooltip content="编辑">
+          <el-button type="primary" circle plain :icon="Edit" @click="showEdit('edit',row)"/>
+        </el-tooltip>
         <el-divider direction="vertical"/>
-        <el-button type="danger" circle plain :icon="Delete" @click="del(row)"/>
+        <el-tooltip content="删除">
+          <el-button type="danger" circle plain :icon="Delete" @click="del(row)"/>
+        </el-tooltip>
+
       </template>
 
     </Table>
