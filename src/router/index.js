@@ -13,6 +13,7 @@ import ProjectList from "../views/blog/ProjectList.vue";
 import UserInfo from "../views/setting/UserInfo.vue";
 import UserController from "../views/setting/UserController.vue";
 import SystemInfo from "../views/setting/SystemInfo.vue";
+import Recycle from "../views/Recycle/Recycle.vue";
 // 2. 定义一些路由
 // 每个路由都需要映射到一个组件。
 // 我们后面再讨论嵌套路由。
@@ -52,6 +53,10 @@ const routes = [
             {
                 path: 'systemInfo',
                 component: SystemInfo
+            },
+            {
+                path: 'recycle',
+                component: Recycle
             }
         ]
     }

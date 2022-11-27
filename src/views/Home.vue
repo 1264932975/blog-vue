@@ -29,7 +29,10 @@
               <el-sub-menu v-for="menu in menuList" :index="menu.title">
                 <template #title>
                   <el-icon>
-                    <Memo/>
+                    <Memo v-if="menu.title=='博客'"/>
+                    <Setting v-if="menu.title=='设置'"/>
+                    <Odometer v-if="menu.title=='系统设置'"/>
+                    <Delete v-if="menu.title=='回收站'"/>
                   </el-icon>
                   <span>{{ menu.title }}</span>
                 </template>
@@ -66,7 +69,7 @@
 </template>
 <script setup>
 import {getCurrentInstance, reactive, ref} from "vue";
-import {Memo, ArrowDown} from '@element-plus/icons-vue'
+import {Memo, ArrowDown, Setting, Delete, Odometer} from '@element-plus/icons-vue'
 import VueCookies from "vue-cookies";
 import router from "../router/index.js";
 import loginApi from "../api/loginApi.js";
@@ -127,6 +130,13 @@ const menuList = ref([{
   chield: [{
     title: "系统设置",
     path: "/home/systemInfo"
+  }
+  ]
+}, {
+  title: "回收站",
+  chield: [{
+    title: "回收站",
+    path: "/home/recycle"
   }
   ]
 }
