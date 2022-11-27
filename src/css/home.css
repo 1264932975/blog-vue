@@ -42,4 +42,6 @@
 .footer {
     margin-top: 10px;
     background: white;
+    text-align: center;
+    font-size: 15px;
 }

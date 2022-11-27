@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <el-header class="header">
-        <div class="logo">logo</div>
+        <div class="logo">Shield</div>
         <div>
           <span>欢迎回来：</span>
           <el-dropdown trigger="hover">
@@ -44,20 +44,46 @@
           <el-main class="main">
             <router-view/>
           </el-main>
-          <el-footer class="footer">Footer</el-footer>
+          <el-footer class="footer">
+            <template v-if="footData.recordState" class="footer">
+              <el-col>
+                <a href="https://beian.miit.gov.cn/" target="_blank">{{ footData.icpNo }}</a>
+              </el-col>
+              <el-col>
+                <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=53070202001309"
+                   style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img
+                    src="https://www.beian.gov.cn/img/new/gongan.png" style="float:left;"/>
+                  <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">
+                    {{ footData.policeNo }}</p></a>
+              </el-col>
+            </template>
+          </el-footer>
         </el-container>
       </el-container>
     </el-container>
   </div>
 </template>
 <script setup>
-import {getCurrentInstance, ref} from "vue";
+import {getCurrentInstance, reactive, ref} from "vue";
 import {Memo, ArrowDown} from '@element-plus/icons-vue'
 import VueCookies from "vue-cookies";
 import router from "../router/index.js";
 import loginApi from "../api/loginApi.js";
+import webSettingApi from "../api/webSettingApi.js";
 
 const {proxy} = getCurrentInstance()
+
+//底部信息
+const footData = reactive({})
+const loadingFoot = async () => {
+  webSettingApi.show().then((res) => {
+    Object.assign(footData, res.data)
+  })
+  console.log(footData)
+}
+loadingFoot();
+
+
 
 const toUserInfo = () => {
   router.push("/home/userInfo")
@@ -94,6 +120,13 @@ const menuList = ref([{
   }, {
     title: "成员管理",
     path: "/home/userController"
+  }
+  ]
+}, {
+  title: "系统设置",
+  chield: [{
+    title: "系统设置",
+    path: "/home/systemInfo"
   }
   ]
 }
