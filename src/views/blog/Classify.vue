@@ -1,4 +1,5 @@
 <template>
+<!--  <title>设置</title>-->
   <div>
     <el-button @click="showEdit('add',null)" type="success">新增分类</el-button>
     <Table :columns="columns"

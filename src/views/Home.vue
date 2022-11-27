@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <el-header class="header">
-        <div class="logo">Shield</div>
+        <div class="logo">{{ footData.webName }}</div>
         <div>
           <span>欢迎回来：</span>
           <el-dropdown trigger="hover">
@@ -50,7 +50,8 @@
                 <a href="https://beian.miit.gov.cn/" target="_blank">{{ footData.icpNo }}</a>
               </el-col>
               <el-col>
-                <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=53070202001309"
+                <a target="_blank"
+                   href="http://www.beian.gov.cn/portal/registerSystemInfo"
                    style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img
                     src="https://www.beian.gov.cn/img/new/gongan.png" style="float:left;"/>
                   <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">
@@ -78,11 +79,10 @@ const footData = reactive({})
 const loadingFoot = async () => {
   webSettingApi.show().then((res) => {
     Object.assign(footData, res.data)
+    document.title = footData.webName
   })
-  console.log(footData)
 }
 loadingFoot();
-
 
 
 const toUserInfo = () => {

@@ -38,6 +38,11 @@
                     v-model="formData.policeNo"/>
         </el-form-item>
       </template>
+      <el-form-item label="网站名称"
+                    prop="webName">
+        <el-input :maxLength="100"
+                  v-model="formData.webName"/>
+      </el-form-item>
       <el-form-item>
         <el-button type="danger"
                    @click="submitForm">保存
@@ -59,6 +64,7 @@ const rules = {
   recordState: [{required: true, message: "是否开启公安备案和ICP备案信息不能为空"}],
   icpNo: [{required: true, message: "ICP备案号不能为空"}],
   policeNo: [{required: true, message: "公安备案号不能为空"}],
+  webName: [{required: true, message: "网站名称不能为空"}],
 }
 
 const loadingData = async () => {
