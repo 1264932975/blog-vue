@@ -14,6 +14,7 @@ export default {
     deleteBlog: query => get(`/api/article/delete`, query),
     goBack: query => get(`/api/article/goBack`, query),
     destroy: query => get(`/api/article/destroy`, query),
+    addToProject: query => post(`/api/article/addToProject`, query),
     indexProjectPage: query => post(`/api/article/open/indexProjectPage`, query),
     removeBlogFromProject: query => form(`/api/article/removeBlogFromProject`, query),
 }

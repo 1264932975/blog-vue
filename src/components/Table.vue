@@ -11,7 +11,9 @@ http://www.wuhancoder.com/special/QYdGDDRMGU.html
               :border="options.border"
               header-row-class-name="table-header-row"
               highlight-current-row
+              @row-contextmenu="contextmenuClick"
               @row-click="handleRowClick"
+              @row-dblclick="dblClick"
               @selection-change="handleSelectionChange">
       <!--selection选择框-->
       <el-table-column v-if="options.selectType && options.selectType == 'checkbox'"
@@ -63,14 +65,14 @@ http://www.wuhancoder.com/special/QYdGDDRMGU.html
                      layout="total, sizes, prev, pager, next, jumper"
                      @size-change="handlePageSizeChange"
                      @current-change="handlePageNoChange"
-                     />
+      />
     </div>
   </div>
 </template>
 <script setup>
 import {ref} from "vue";
 
-const emit = defineEmits(["rowSelected", "rowClick"]);
+const emit = defineEmits(["rowSelected", "rowClick", "rowContextmenu", "rowDblClick"]);
 const props = defineProps({
   dataSource: Object,
   showPagination: {
@@ -106,6 +108,12 @@ const tableHeight = ref(
 const dataTable = ref();
 
 //行点击
+const dblClick = (row) => {
+  emit("rowDblClick", row)
+}
+const contextmenuClick = (row) => {
+  emit("rowContextmenu", row)
+}
 const handleRowClick = (row) => {
   emit("rowClick", row);
 };

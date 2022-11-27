@@ -19,11 +19,12 @@
               <Cover :cover=" row.cover"></Cover>
             </template>
             <template #op="{index,row}">
-              <a class="a-link" @click="showEdit('edit',row)">修改</a>
+              <el-button type="primary" circle plain :icon="Edit" @click="showEdit('edit',row)"/>
               <el-divider direction="vertical"/>
-              <a class="a-link" @click="del(row)">删除</a>
+              <el-button type="danger" plain :icon="Delete" circle @click="del(row)"/>
+              <el-divider/>
+              <el-button type="success" plain size="small" @click="blogAdd(row)" round>添加博客到专题</el-button>
             </template>
-
           </Table>
         </el-card>
       </el-col>
@@ -44,27 +45,41 @@
               </Table>
             </div>
           </template>
-          <Dialog :show="dialogConfig.show" :title="dialogConfig.title" :buttons="dialogConfig.buttons"
-                  @close="dialogConfig.show=false">
-            <el-form>
-              <el-form :model="formData" :rules="rules" ref="formDataRef">
-                <el-form-item prop="name" label="名称">
-                  <el-input v-model="formData.name" clearable/>
-                </el-form-item>
-                <el-form-item prop="cover" label="封面">
-                  <ImgUpload v-model="formData.cover"></ImgUpload>
-                </el-form-item>
-                <el-form-item prop="about" label="简介">
-                  <el-input type="textarea" v-model="formData.about" :row="3"/>
-                </el-form-item>
-              </el-form>
-            </el-form>
-          </Dialog>
         </el-card>
       </el-col>
     </el-row>
   </div>
-
+  <Dialog :show="dialogConfig.show" :title="dialogConfig.title" :buttons="dialogConfig.buttons"
+          @close="dialogConfig.show=false">
+    <el-form>
+      <el-form :model="formData" :rules="rules" ref="formDataRef">
+        <el-form-item prop="name" label="名称">
+          <el-input v-model="formData.name" clearable/>
+        </el-form-item>
+        <el-form-item prop="cover" label="封面">
+          <ImgUpload v-model="formData.cover"></ImgUpload>
+        </el-form-item>
+        <el-form-item prop="about" label="简介">
+          <el-input type="textarea" v-model="formData.about" :row="3"/>
+        </el-form-item>
+      </el-form>
+    </el-form>
+  </Dialog>
+  <Dialog :show="addBlogDialog.show" :title="addBlogDialog.title" :buttons="addBlogDialog.buttons"
+          @close="addBlogDialog.show=false">
+    <el-form>
+      <el-form :model="blogAddData"
+               :rules="{projectId:{required: true,message: '专题编号不能为空'},articleId:{required: true,message: '博客编号不能为空'}}"
+               ref="formDataRef">
+        <el-form-item prop="projectId" label="专题编号">
+          <el-input v-model="blogAddData.projectId" disabled/>
+        </el-form-item>
+        <el-form-item prop="articleId" label="博客编号">
+          <el-input v-model="blogAddData.articleId" placeholder="在博客列表双击所选博客即可复制编号"/>
+        </el-form-item>
+      </el-form>
+    </el-form>
+  </Dialog>
 </template>
 
 <script setup>
@@ -74,8 +89,35 @@ import Dialog from "../../components/Dialog.vue";
 import ImgUpload from "../../components/ImgUpload.vue";
 import blogApi from "../../api/blogApi.js";
 import Confirm from "../../util/Confirm.js";
+import {Delete, Edit} from "@element-plus/icons-vue"
 
 const {proxy} = getCurrentInstance();
+
+//添加文章
+const blogAddData = ref({});
+const blogAdd = (row) => {
+  blogAddData.value = {}
+  blogAddData.value.projectId = row.id
+  addBlogDialog.show = true
+}
+const addBlogDialog = reactive({
+  title: "添加文章到专题",
+  show: false,
+  buttons: [{
+    type: "danger",
+    text: "确定",
+    click: async (e) => {
+      blogApi.addToProject(blogAddData.value).then((res) => {
+        if (res) {
+          proxy.$message.success(res.msg)
+          addBlogDialog.show = false
+          rowClick({id:blogAddData.value.projectId});
+        }
+      })
+    }
+  }]
+})
+
 
 //从专题中移除
 const delForProject = (data) => {
@@ -85,7 +127,7 @@ const delForProject = (data) => {
       projectId: rowid.value
     }
     blogApi.removeBlogFromProject(parames).then((result) => {
-      if (result){
+      if (result) {
         proxy.$message.success(result.msg)
         loadingRightData();
       }
@@ -106,7 +148,7 @@ const loadingRightData = () => {
     pageSize: blogData.value.pageSize,
   }
   blogApi.indexProjectPage(parames).then((res) => {
-    if (res){
+    if (res) {
       blogData.value = JSON.parse(JSON.stringify(res.data))
     }
   })
@@ -131,7 +173,7 @@ const rightcColumns = [{
 const del = (data) => {
   Confirm("确定删除" + data.name + "?", () => {
     blogApi.deleteProject({id: data.id}).then((result) => {
-      if (result){
+      if (result) {
         proxy.$message.success(result.msg)
         lodingData();
       }
@@ -194,7 +236,7 @@ const showEdit = (type, data) => {
 const lodingData = () => {
   let params = {pageNum: tableData.pageNum, pageSize: tableData.pageSize}
   blogApi.getProject(params).then((result) => {
-    if (result){
+    if (result) {
       Object.assign(tableData, result.data)
     }
   })
@@ -219,7 +261,7 @@ const columns = [{
 }, {
   label: "操作",
   prop: "op",
-  width: 100,
+  width: 150,
   scopedSlots: "op"
 
 }

@@ -29,6 +29,7 @@
            :fetch="loadingFormData"
            :dataSource="tableData"
            :options="tableOptions"
+           @rowDblClick="rowClick"
     >
       <template #cover="{index,row}">
         <Cover :cover=" row.cover"></Cover>
@@ -47,9 +48,9 @@
         </div>
       </template>
       <template #op="{index,row}">
-        <a class="a-link" @click="showEdit('edit',row)">修改</a>
+        <el-button type="primary" circle plain :icon="Edit" @click="showEdit('edit',row)"/>
         <el-divider direction="vertical"/>
-        <a class="a-link" @click="del(row)">删除</a>
+        <el-button type="danger" plain :icon="Delete" circle @click="del(row)"/>
       </template>
     </Table>
     <Dialog :show="windowConfig.show" :title="windowConfig.title" :buttons="windowConfig.buttons"
@@ -113,10 +114,18 @@
 
 <script setup>
 import {getCurrentInstance, nextTick, reactive, ref} from "vue";
-import {Search, Check, Close} from '@element-plus/icons-vue'
+import {Search, Check, Close, Delete, Edit} from '@element-plus/icons-vue'
 import blogApi from "../../api/blogApi.js";
 import EditMarkDown from "../../components/EditMarkDown.vue";
 import Confirm from "../../util/Confirm.js";
+
+//点击行复制
+const rowClick = (data) => {
+  navigator.clipboard.writeText(data.id).then(() => {
+    proxy.$message.success("文章编号复制成功")
+  })
+}
+
 
 //删除
 const del = (data) => {
@@ -248,6 +257,10 @@ const tableOptions = {
 }
 const tableData = reactive({});
 const columns = [{
+  label: "文章编号",
+  prop: "id",
+  width: 150,
+}, {
   label: "封面",
   prop: "cover",
   width: 200,
@@ -279,7 +292,7 @@ const columns = [{
 }, {
   label: "操作",
   prop: "op",
-  width: 100,
+  width: 120,
   scopedSlots: "op"
 }
 ]
@@ -289,7 +302,7 @@ const searchbarData = reactive({})
 const classifyList = ref();
 const loadingClassifyList = () => {
   blogApi.getClassify(null).then((result) => {
-    if (result){
+    if (result) {
       classifyList.value = result.data;
     }
   })

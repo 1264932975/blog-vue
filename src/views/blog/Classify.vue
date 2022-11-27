@@ -1,5 +1,5 @@
 <template>
-<!--  <title>设置</title>-->
+  <!--  <title>设置</title>-->
   <div>
     <el-button @click="showEdit('add',null)" type="success">新增分类</el-button>
     <Table :columns="columns"
@@ -12,9 +12,9 @@
         <Cover :cover=" row.cover"></Cover>
       </template>
       <template #op="{index,row}">
-        <a class="a-link" @click="showEdit('edit',row)">修改</a>
+        <el-button type="primary" circle plain :icon="Edit" @click="showEdit('edit',row)"/>
         <el-divider direction="vertical"/>
-        <a class="a-link" @click="del(row)">删除</a>
+        <el-button type="danger" circle plain :icon="Delete" @click="del(row)"/>
       </template>
 
     </Table>
@@ -45,6 +45,7 @@ import Dialog from "../../components/Dialog.vue";
 import ImgUpload from "../../components/ImgUpload.vue";
 import blogApi from "../../api/blogApi.js";
 import Confirm from "../../util/Confirm.js";
+import {Delete, Edit} from "@element-plus/icons-vue"
 
 const {proxy} = getCurrentInstance();
 
@@ -53,7 +54,7 @@ const {proxy} = getCurrentInstance();
 const del = (data) => {
   Confirm("确定删除" + data.name + "?", () => {
     blogApi.deleteClassify({id: data.id}).then((result) => {
-      if (result){
+      if (result) {
         proxy.$message.success(result.msg)
         lodingData();
       }
@@ -116,7 +117,7 @@ const showEdit = (type, data) => {
 // 列表
 const lodingData = () => {
   blogApi.getClassify(null).then((result) => {
-    if (result){
+    if (result) {
       tableData.list = result.data;
     }
   })
@@ -144,7 +145,7 @@ const columns = [{
 }, {
   label: "操作",
   prop: "op",
-  width: 100,
+  width: 120,
   scopedSlots: "op"
 
 }
