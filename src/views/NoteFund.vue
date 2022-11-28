@@ -1,5 +1,5 @@
 <template>
-  <h1>404</h1>
+  <h1>没有找到这个页面哦！别瞎看</h1>
 </template>
 
 <script setup>
