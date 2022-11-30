@@ -1,5 +1,6 @@
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
+
 export default defineConfig({
     plugins: [
         vue()
@@ -12,7 +13,7 @@ export default defineConfig({
             '/api': {
                 target: 'http://localhost:7000',  //API服务地址
                 changeOrigin: true,             //开启跨域
-                rewrite: (path) => path.replace(/^\/api/, '')
+                rewrite: (path) => path.replace(/^\/api/, '/')
             }
         }
     }
