@@ -130,6 +130,9 @@ const menuList = ref([{
   chield: [{
     title: "系统设置",
     path: "/home/systemInfo"
+  },{
+    title: "微信公众号",
+    path: "/home/wxOfficial"
   }
   ]
 }, {

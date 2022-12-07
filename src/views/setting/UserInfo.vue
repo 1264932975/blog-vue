@@ -184,7 +184,6 @@ const formData = ref({})
 const loadingData = () => {
   userApi.showDetil().then((res) => {
     if (res) {
-      console.log(res.data)
       formData.value = res.data
     }
   })

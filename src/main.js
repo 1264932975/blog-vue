@@ -22,6 +22,7 @@ app.component("Dialog", Dialog)
 app.component("EditMarkDown", EditMarkDown)
 app.component("ImgUpload", ImgUpload)
 app.config.globalProperties.globalUrl = {
+    // imgUrl: "https://00shen.space/api/img/"
     imgUrl: "/api/img/"
 }
 app.config.globalProperties.Confirm=Confirm;

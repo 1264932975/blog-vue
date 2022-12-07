@@ -3,6 +3,7 @@ import {ElLoading, ElMessage} from "element-plus";
 import router from "../router/index.js";
 import VueCookies from "vue-cookies";
 
+// axios.defaults.baseURL='https://00shen.space'
 const options = {
     lock: true,
     text: '正在加载...',

@@ -51,6 +51,7 @@ VMdEditor.use(createLineNumbertPlugin());
 const emit = defineEmits();
 const change = (text, html) => {
   emit("update:modelValue", text)
+  emit("update:htmlValue", html)
 }
 
 const props = defineProps({
@@ -58,6 +59,7 @@ const props = defineProps({
     type: String,
     default: "# :warning:编辑器内图片无缓存存储区，一经上传永久存储，为了节省服务器磁盘空间，请谨慎上传:warning:\n如有删除请记录文件存储位置联系管理员删除"
   },
+  htmlValue: String,
   save: Function,
   height: {
     type: Number,

@@ -1,6 +1,6 @@
 // 1. 定义路由组件.
 // 也可以从其他文件导入
-import {createRouter, createWebHistory} from "vue-router";
+import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 import LoginMain from "../views/login/LoginMain.vue";
 import Login from "../views/login/Login.vue";
 import NoteFund from "../views/NoteFund.vue";
@@ -14,6 +14,7 @@ import UserInfo from "../views/setting/UserInfo.vue";
 import UserController from "../views/setting/UserController.vue";
 import SystemInfo from "../views/setting/SystemInfo.vue";
 import Recycle from "../views/Recycle/Recycle.vue";
+import wxOfficial from "../views/setting/wxOfficial.vue";
 // 2. 定义一些路由
 // 每个路由都需要映射到一个组件。
 // 我们后面再讨论嵌套路由。
@@ -57,6 +58,10 @@ const routes = [
             {
                 path: 'recycle',
                 component: Recycle
+            },
+            {
+                path: 'wxOfficial',
+                component: wxOfficial
             }
         ]
     }
@@ -67,7 +72,7 @@ const routes = [
 // 暂时保持简单
 const router = createRouter({
     // 4. 内部提供了 history 模式的实现。为了简单起见，我们在这里使用 hash 模式。
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes, // `routes: routes` 的缩写
 })
 

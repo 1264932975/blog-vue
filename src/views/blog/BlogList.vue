@@ -104,7 +104,7 @@
           </el-form-item>
         </el-row>
         <el-form-item prop="bolgText">
-          <EditMarkDown v-model="editData.bolgText" :save="editBlog"></EditMarkDown>
+          <EditMarkDown v-model="editData.bolgText" v-model:html-value="editData.htmlValue" :edit="editBlog"></EditMarkDown>
         </el-form-item>
         <el-form-item prop="bolgAbstract" label="摘要:">
           <el-input type="textarea" v-model="editData.bolgAbstract" show-word-limit placeholder="请输入文章摘要"
