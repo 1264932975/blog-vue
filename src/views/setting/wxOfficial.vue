@@ -54,6 +54,7 @@ const submit = () => {
       formData.hasId = false
     }
   })
+  loadingData();
 }
 loadingData();
 </script>
